@@ -46,6 +46,6 @@ Mountain View
 
 ### Specify field (current IP address)
 ```
-$ ./ipinfo.sh -f city
-Chengdu
+$ ./ipinfo.sh -f ip
+117.175.141.105
 ```
