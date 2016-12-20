@@ -10,11 +10,16 @@ url="ipinfo.io"
 usage() {
 	echo "Usage: $0 [-f field] [IP address]" 1>&2
 	echo " -f field	Only output specified field's info. Run script without -f to see available fields." 1>&2
+	echo " -w		Force use wget instead of curl" 1>&2
 	echo " -h		Show this help text." 1>&2
 }
 
-while getopts "f:h" o; do
+while getopts "f:hw" o; do
     case "${o}" in
+        w)
+                useWget=1
+                ;;
+
         f)
             f=${OPTARG}
             ;;
@@ -36,22 +41,29 @@ function is_valid_ip_address {
 }
 
 # Specified IP address
-if [ ! -z "$*" ]; then	
+if [ ! -z "$*" ]; then
 	if [ $(is_valid_ip_address $*) -eq 0 ]; then
 		echo "Error: The IP address must be in IPv4 or IPv6 format" 1>&2
 		exit 1
 	fi
-	
+
 	url="$url/$*"
 fi
 
 # Specified field
 if [ ! -z "$f" ]; then
 	url="$url/$f"
+else
+	# Make sure we get json obj and not the webpage
+	url="$url/json"
 fi
 
-
-the_info=$(curl -s $url)
+# Check if curl exists, if not try wget.
+if ! hash curl 2> /dev/null || [ -n "$useWget" ]; then
+	the_info=$(wget -O- -q $url)
+else
+	the_info=$(curl -s $url)
+fi
 
 if [[ $the_info == *"502 Bad Gateway"* || $the_info == "undefined" ]]; then
 	echo "Error: Invalid endpoint. Perhaps you specified a non-existing field?"
