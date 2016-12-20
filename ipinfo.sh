@@ -17,7 +17,7 @@ usage() {
 while getopts "f:hw" o; do
     case "${o}" in
         w)
-                useWget=1
+                use_wget=1
                 ;;
 
         f)
@@ -59,7 +59,7 @@ else
 fi
 
 # Check if curl exists, if not try wget.
-if ! hash curl 2> /dev/null || [ -n "$useWget" ]; then
+if ! hash curl 2> /dev/null || [ -n "$use_wget" ]; then
 	the_info=$(wget -O- -q $url)
 else
 	the_info=$(curl -s $url)
