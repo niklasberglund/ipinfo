@@ -60,15 +60,15 @@ fi
 
 # Check if curl exists, if not try wget.
 if ! hash curl 2> /dev/null || [ -n "$use_wget" ]; then
-	the_info=$(wget -O- -q $url)
+	info=$(wget -O- -q $url)
 else
 	the_info=$(curl -s $url)
 fi
 
-if [[ $the_info == *"502 Bad Gateway"* || $the_info == "undefined" ]]; then
+if [[ $info == *"502 Bad Gateway"* || $info == "undefined" ]]; then
 	echo "Error: Invalid endpoint. Perhaps you specified a non-existing field?"
 	usage
 	exit 1
 fi
 
-echo "$the_info" | sed -e '/[{}]/d' | sed 's/\"//g' | sed 's/  //g' | sed 's/,$//'
+echo "$info" | sed -e '/[{}]/d' | sed 's/\"//g' | sed 's/  //g' | sed 's/,$//'
