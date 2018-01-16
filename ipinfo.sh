@@ -72,3 +72,7 @@ if [[ $the_info == *"502 Bad Gateway"* || $the_info == "undefined" ]]; then
 fi
 
 echo "$the_info" | sed -e '/[{}]/d' | sed 's/\"//g' | sed 's/  //g' | sed 's/,$//'
+SCRIPT=$(readlink -f "$0")
+# Get the path scripts to the directory
+SCRIPTPATH=$(dirname "$SCRIPT")
+echo $SCRIPTPATH
